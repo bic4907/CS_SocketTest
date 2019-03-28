@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WindowsFormsApp1
+namespace SocketTest
 {
     static class Program
     {
@@ -29,7 +29,7 @@ namespace WindowsFormsApp1
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Form1 basicForm = new Form1();
+            BasicForm basicForm = new BasicForm();
             ServerController svController = new ServerController(basicForm);
             basicForm.AddController(svController);
             Debug.Print("프린터 연결됨");

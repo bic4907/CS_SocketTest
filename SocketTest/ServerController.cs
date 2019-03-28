@@ -6,17 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WindowsFormsApp1
+namespace SocketTest
 {
     class ServerController
     {
         private TCPServer svInstance;
-        private Form1 view;
+        private BasicForm view;
 
         internal ServerController() {
             svInstance = new TCPServer(this);
         }
-        internal ServerController(Form1 view) : this()
+        internal ServerController(BasicForm view) : this()
         {
             this.view = view;
 
@@ -37,7 +37,8 @@ namespace WindowsFormsApp1
 
         internal void ChangeStatusMessage(string msg)
         {
-            this.view.buttonStatusStrip.Text = msg;
+
+            this.view.bottomServerStatus.Text = msg;
         }
 
 

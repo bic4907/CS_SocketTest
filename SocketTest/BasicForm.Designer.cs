@@ -1,6 +1,6 @@
-﻿namespace WindowsFormsApp1
+﻿namespace SocketTest
 {
-    partial class Form1
+    partial class BasicForm
     {
         /// <summary>
         /// 필수 디자이너 변수입니다.
@@ -31,7 +31,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.clientList = new System.Windows.Forms.ListBox();
             this.buttonStatusStrip = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.bottomServerStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.buttonStatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -43,6 +43,7 @@
             this.button1.TabIndex = 0;
             this.button1.Text = "서버열기";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // clientList
             // 
@@ -56,20 +57,20 @@
             // buttonStatusStrip
             // 
             this.buttonStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1});
+            this.bottomServerStatus});
             this.buttonStatusStrip.Location = new System.Drawing.Point(0, 251);
             this.buttonStatusStrip.Name = "buttonStatusStrip";
             this.buttonStatusStrip.Size = new System.Drawing.Size(598, 22);
             this.buttonStatusStrip.TabIndex = 0;
             this.buttonStatusStrip.Text = "상태 메세지";
             // 
-            // toolStripStatusLabel1
+            // bottomServerStatus
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(121, 17);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            this.bottomServerStatus.Name = "bottomServerStatus";
+            this.bottomServerStatus.Size = new System.Drawing.Size(55, 17);
+            this.bottomServerStatus.Text = "서버상태";
             // 
-            // Form1
+            // BasicForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -78,9 +79,9 @@
             this.Controls.Add(this.clientList);
             this.Controls.Add(this.button1);
             this.MaximizeBox = false;
-            this.Name = "Form1";
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Name = "BasicForm";
+            this.Text = "BasicForm";
+            this.Load += new System.EventHandler(this.BasicForm_Load);
             this.buttonStatusStrip.ResumeLayout(false);
             this.buttonStatusStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -93,7 +94,7 @@
         public System.Windows.Forms.Button button1;
         public System.Windows.Forms.ListBox clientList;
         public System.Windows.Forms.StatusStrip buttonStatusStrip;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        public System.Windows.Forms.ToolStripStatusLabel bottomServerStatus;
     }
 }
 
