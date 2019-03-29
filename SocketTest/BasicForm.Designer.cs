@@ -1,4 +1,7 @@
-﻿namespace SocketTest
+﻿using System;
+using System.Windows.Forms;
+
+namespace SocketTest
 {
     partial class BasicForm
     {
@@ -29,30 +32,25 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
-            this.clientList = new System.Windows.Forms.ListBox();
             this.buttonStatusStrip = new System.Windows.Forms.StatusStrip();
             this.bottomServerStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.connectBtn = new System.Windows.Forms.Button();
+            this.svClientList = new System.Windows.Forms.ListView();
+            this.IP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.last_timestamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+
             this.buttonStatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(511, 25);
+            this.button1.Location = new System.Drawing.Point(22, 12);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
             this.button1.Text = "서버열기";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // clientList
-            // 
-            this.clientList.FormattingEnabled = true;
-            this.clientList.ItemHeight = 12;
-            this.clientList.Location = new System.Drawing.Point(22, 16);
-            this.clientList.Name = "clientList";
-            this.clientList.Size = new System.Drawing.Size(215, 232);
-            this.clientList.TabIndex = 1;
             // 
             // buttonStatusStrip
             // 
@@ -60,23 +58,68 @@
             this.bottomServerStatus});
             this.buttonStatusStrip.Location = new System.Drawing.Point(0, 251);
             this.buttonStatusStrip.Name = "buttonStatusStrip";
-            this.buttonStatusStrip.Size = new System.Drawing.Size(598, 22);
+            this.buttonStatusStrip.Size = new System.Drawing.Size(498, 22);
             this.buttonStatusStrip.TabIndex = 0;
             this.buttonStatusStrip.Text = "상태 메세지";
             // 
             // bottomServerStatus
             // 
             this.bottomServerStatus.Name = "bottomServerStatus";
-            this.bottomServerStatus.Size = new System.Drawing.Size(55, 17);
-            this.bottomServerStatus.Text = "서버상태";
+            this.bottomServerStatus.Size = new System.Drawing.Size(83, 17);
+            this.bottomServerStatus.Text = "서버 오프라인";
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 12;
+            this.listBox1.Location = new System.Drawing.Point(254, 40);
+            this.listBox1.MultiColumn = true;
+            this.listBox1.Name = "listBox1";
+            this.listBox1.ScrollAlwaysVisible = true;
+            this.listBox1.Size = new System.Drawing.Size(215, 208);
+            this.listBox1.TabIndex = 1;
+            // 
+            // connectBtn
+            // 
+            this.connectBtn.Location = new System.Drawing.Point(394, 12);
+            this.connectBtn.Name = "connectBtn";
+            this.connectBtn.Size = new System.Drawing.Size(75, 23);
+            this.connectBtn.TabIndex = 0;
+            this.connectBtn.Text = "서버접속";
+            this.connectBtn.UseVisualStyleBackColor = true;
+            // 
+            // svClientList
+            // 
+            this.svClientList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.IP,
+            this.last_timestamp});
+            this.svClientList.Location = new System.Drawing.Point(22, 41);
+            this.svClientList.MultiSelect = false;
+            this.svClientList.Name = "svClientList";
+            this.svClientList.Size = new System.Drawing.Size(210, 207);
+            this.svClientList.TabIndex = 2;
+            this.svClientList.UseCompatibleStateImageBehavior = false;
+            this.svClientList.View = System.Windows.Forms.View.Details;
+            // 
+            // IP
+            // 
+            this.IP.Text = "IP";
+            this.IP.Width = 100;
+            // 
+            // last_timestamp
+            // 
+            this.last_timestamp.Text = "LastTimestamp";
+            this.last_timestamp.Width = 120;
             // 
             // BasicForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(598, 273);
+            this.ClientSize = new System.Drawing.Size(498, 273);
+            this.Controls.Add(this.svClientList);
             this.Controls.Add(this.buttonStatusStrip);
-            this.Controls.Add(this.clientList);
+            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.connectBtn);
             this.Controls.Add(this.button1);
             this.MaximizeBox = false;
             this.Name = "BasicForm";
@@ -89,12 +132,18 @@
 
         }
 
+
+
         #endregion
 
         public System.Windows.Forms.Button button1;
-        public System.Windows.Forms.ListBox clientList;
         public System.Windows.Forms.StatusStrip buttonStatusStrip;
         public System.Windows.Forms.ToolStripStatusLabel bottomServerStatus;
+        public System.Windows.Forms.ListBox listBox1;
+        public System.Windows.Forms.Button connectBtn;
+        public System.Windows.Forms.ListView svClientList;
+        private ColumnHeader IP;
+        private ColumnHeader last_timestamp;
     }
 }
 

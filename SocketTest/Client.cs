@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,19 +12,28 @@ namespace SocketTest
     {
         string ip;
         long last_timestmp;
+        private TcpClient tc;
+        private float latency;
 
-        Client(string ip)
+
+        public Client(TcpClient tc)
         {
-            this.ip = ip;
+            this.ip = tc.Client.RemoteEndPoint.ToString();
+            this.last_timestmp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            this.tc = tc;
+            this.latency = -1;
+
         }
 
+        public void SetIP(string ip) { this.ip = ip; }
+        public string GetIP() { return this.ip; }
 
+        public void SetLastTimestamp(long timestamp) { this.last_timestmp = timestamp; }
+        public long GetLastTimeStamp() { return this.last_timestmp ; }
 
-        void setIP(string ip) { this.ip = ip; }
-        string getIP() { return this.ip; }
+        public void SetLatency(float ltc) { this.latency = ltc; }
+        public float GetLatency() { return this.latency; }
 
-        void setLastTimestamp(long timestamp) { this.last_timestmp = timestamp; }
-        long getLastTimeStamp() { return this.last_timestmp ; }
-
+        public TcpClient GetSocket() { return this.tc; }
     }
 }
