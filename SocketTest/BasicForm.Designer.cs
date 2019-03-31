@@ -39,7 +39,8 @@ namespace SocketTest
             this.svClientList = new System.Windows.Forms.ListView();
             this.IP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.last_timestamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-
+            this.sendMsg = new System.Windows.Forms.Button();
+            this.msgTxtBox = new System.Windows.Forms.TextBox();
             this.buttonStatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -72,11 +73,11 @@ namespace SocketTest
             // 
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(254, 40);
+            this.listBox1.Location = new System.Drawing.Point(254, 112);
             this.listBox1.MultiColumn = true;
             this.listBox1.Name = "listBox1";
             this.listBox1.ScrollAlwaysVisible = true;
-            this.listBox1.Size = new System.Drawing.Size(215, 208);
+            this.listBox1.Size = new System.Drawing.Size(215, 136);
             this.listBox1.TabIndex = 1;
             // 
             // connectBtn
@@ -93,10 +94,10 @@ namespace SocketTest
             this.svClientList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.IP,
             this.last_timestamp});
-            this.svClientList.Location = new System.Drawing.Point(22, 41);
+            this.svClientList.Location = new System.Drawing.Point(22, 111);
             this.svClientList.MultiSelect = false;
             this.svClientList.Name = "svClientList";
-            this.svClientList.Size = new System.Drawing.Size(210, 207);
+            this.svClientList.Size = new System.Drawing.Size(210, 137);
             this.svClientList.TabIndex = 2;
             this.svClientList.UseCompatibleStateImageBehavior = false;
             this.svClientList.View = System.Windows.Forms.View.Details;
@@ -111,15 +112,34 @@ namespace SocketTest
             this.last_timestamp.Text = "LastTimestamp";
             this.last_timestamp.Width = 120;
             // 
+            // sendMsg
+            // 
+            this.sendMsg.Location = new System.Drawing.Point(115, 40);
+            this.sendMsg.Name = "sendMsg";
+            this.sendMsg.Size = new System.Drawing.Size(117, 23);
+            this.sendMsg.TabIndex = 0;
+            this.sendMsg.Text = "전체 메세지 전송";
+            this.sendMsg.UseVisualStyleBackColor = true;
+            this.sendMsg.Click += new System.EventHandler(this.sendMsg_Click);
+            // 
+            // msgTxtBox
+            // 
+            this.msgTxtBox.Location = new System.Drawing.Point(22, 42);
+            this.msgTxtBox.Name = "msgTxtBox";
+            this.msgTxtBox.Size = new System.Drawing.Size(87, 21);
+            this.msgTxtBox.TabIndex = 3;
+            // 
             // BasicForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(498, 273);
+            this.Controls.Add(this.msgTxtBox);
             this.Controls.Add(this.svClientList);
             this.Controls.Add(this.buttonStatusStrip);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.connectBtn);
+            this.Controls.Add(this.sendMsg);
             this.Controls.Add(this.button1);
             this.MaximizeBox = false;
             this.Name = "BasicForm";
@@ -144,6 +164,8 @@ namespace SocketTest
         public System.Windows.Forms.ListView svClientList;
         private ColumnHeader IP;
         private ColumnHeader last_timestamp;
+        public Button sendMsg;
+        private TextBox msgTxtBox;
     }
 }
 

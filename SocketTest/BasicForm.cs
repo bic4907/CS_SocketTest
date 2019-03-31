@@ -90,5 +90,12 @@ namespace SocketTest
             }
         }
 
+        private void sendMsg_Click(object sender, EventArgs e)
+        {
+            string msg = this.msgTxtBox.Text;
+            this.svController.SendMessage(msg, broadcast: true);
+
+
+        }
     }
 }

@@ -21,11 +21,13 @@ namespace SocketTest
         private ServerController controller;
         private Thread aliveThr;
         private Thread serverThr;
+        private TCPThreadPool thrPool;
 
         private List<Client> clients;
 
         internal TCPServer() {
             this.clients = new List<Client>();
+            thrPool = TCPThreadPool.GetInstance(1);
             this.server = null;
             this.aliveThr = null;
         }
@@ -73,6 +75,8 @@ namespace SocketTest
 
                 serverThr = new Thread(new ThreadStart(ServerThread));
                 serverThr.Start();
+                thrPool.Start();
+
                 StartAliveCheck();
 
                 return true;
@@ -92,6 +96,11 @@ namespace SocketTest
         {
             return this.clients;
         }
+        internal List<Client> GetActualClients()
+        {
+            return this.clients.FindAll(x => x.IsActual);
+        }
+
 
         private void ServerThread()
         {
@@ -109,7 +118,7 @@ namespace SocketTest
 
                 try
                 {
-                    foreach (Client c in clients)
+                    foreach (Client c in this.clients)
                     {
                         try
                         {
@@ -124,14 +133,11 @@ namespace SocketTest
 
                                 if (recvPacket.Cmd == TCPClientCmd.PONG)
                                 {
-                                    Debug.Print(c.GetSocket().Client.RemoteEndPoint.ToString() + " pong!!!");
                                     this.pong(c, recvPacket);
-
-
-
-
-
-
+                                }
+                                else if(recvPacket.Cmd == TCPClientCmd.Actual)
+                                {
+                                    this.AuthClient(c);
                                 }
 
 
@@ -146,7 +152,13 @@ namespace SocketTest
                 {
                     Debug.Print(e.Message);
                 }
+                Thread.Sleep(10);
             }
+        }
+
+        private void AuthClient(Client c)
+        {
+            this.clients.Find(x => x.GetIP() == c.GetIP()).IsActual = true;
         }
 
         public void Stop()
@@ -182,7 +194,7 @@ namespace SocketTest
                 {
                     try
                     {
-                        foreach (Client c in clients)
+                        foreach (Client c in GetActualClients())
                         {
                             ping(c.GetSocket());
                         }
@@ -221,8 +233,6 @@ namespace SocketTest
                     pck.Param = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
                     formatter.Serialize(stream, pck);
 
-                    Debug.Print(tc.Client.RemoteEndPoint.ToString() + " ping!!");
-
                 }
             }
             catch (Exception)
@@ -241,7 +251,25 @@ namespace SocketTest
         }
 
 
-        
+        public void SendMessage(string msg, string uid = null, bool broadcast = false)
+        {
+            if(broadcast)
+            {
+                List<Client> targetCls = GetActualClients();
+                foreach (Client c in targetCls)
+                {
+                    TCPTask task = new TCPTask(c, TCPServerCmd.Message, "hi");
+                    thrPool.Push(task);
+                    Debug.Print("메세지를 전송합니다");
+                }
+                
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
 
 
     }

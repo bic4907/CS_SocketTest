@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -19,11 +20,13 @@ namespace SocketTest
         ServerController controller;
         TcpClient mainTc;
         Thread mainSckThr;
+        Queue<TCPClientMessage> sendQueue;
 
         internal TCPClient()
         {
             mainTc = null;
             mainSckThr = null;
+            sendQueue = new Queue<TCPClientMessage>();
         }
         internal TCPClient(ServerController controller) : this()
         {
@@ -64,10 +67,10 @@ namespace SocketTest
                 mainTc = new TcpClient();
                 mainTc.Connect(IPAddress.Loopback.ToString(), 8080);
                 
-                Debug.Print("서버 연결됨");
                 mainSckThr = new Thread(new ThreadStart(MainThread));
                 mainSckThr.Start();
 
+                this.SendActual();
 
                 return true;
             }
@@ -86,11 +89,19 @@ namespace SocketTest
             }
         }
 
+        private void SendActual()
+        {
+            TCPClientMessage sendPacket = new TCPClientMessage();
+            sendPacket.RemoteTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            sendPacket.Cmd = TCPClientCmd.Actual;
+            this.sendQueue.Enqueue(sendPacket);
+        }
+
         private void MainThread() {
             while(true)
             {
                 
-
+                // Receiving
                 NetworkStream stream = mainTc.GetStream();
 
                 if (stream.CanRead && stream.DataAvailable)
@@ -101,22 +112,32 @@ namespace SocketTest
 
                     if(recvPacket.Cmd == TCPServerCmd.PING)
                     {
-  
                         TCPClientMessage sendPacket = new TCPClientMessage(recvPacket);
                         sendPacket.Cmd = TCPClientCmd.PONG;
                         formatter.Serialize(stream, sendPacket);
-
-                        
-
-
-
-
+                    } else if(recvPacket.Cmd == TCPServerCmd.Message)
+                    {
+                        string tmp_data = recvPacket.Param;
+                        controller.ShowMessage(tmp_data);
                     }
 
+                }
+                {
+                    // Sending
+                    if (this.sendQueue.Count == 0) continue;
+                    TCPClientMessage task = this.sendQueue.Dequeue();
+
+                    IFormatter formatter = new BinaryFormatter();
+                    task.RemoteTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                    formatter.Serialize(stream, task);
                 }
 
 
             }
+            
+
+
+
 
         }
 

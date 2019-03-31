@@ -10,6 +10,7 @@ namespace SocketTest
     {
         PING = 0,
         PONG,
+        Actual,
     };
 
     [Serializable]

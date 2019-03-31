@@ -86,7 +86,11 @@ namespace SocketTest
             )
         {
 
-            MessageBox.Show(v, title, btnType, icon);
+            Task.Run(() =>
+            {
+                MessageBox.Show(v, title, btnType, icon);
+            });
+
         }
 
         [System.ComponentModel.Browsable(false)]
@@ -96,7 +100,7 @@ namespace SocketTest
             List<int> deleteIdx = new List<int>();
 
 
-            foreach(Client c in svInstance.GetClients()) {
+            foreach(Client c in svInstance.GetActualClients()) {
                 ipHash.Add(c.GetIP(), c);
             }
 
@@ -128,7 +132,7 @@ namespace SocketTest
 
             foreach (KeyValuePair<string, Client> pair in ipHash)
             {
-                
+
                 ListViewItem lvi = new ListViewItem();
                 lvi.Text = pair.Key;
                 lvi.SubItems.Add(pair.Value.GetLastTimeStamp().ToString());
@@ -137,6 +141,11 @@ namespace SocketTest
             
 
 
+        }
+
+        public void SendMessage(string msg, string uid = null, bool broadcast = false)
+        {
+            this.svInstance.SendMessage(uid, msg, broadcast);
         }
     }
 

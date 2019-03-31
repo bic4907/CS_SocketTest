@@ -14,7 +14,9 @@ namespace SocketTest
         long last_timestmp;
         private TcpClient tc;
         private float latency;
+        bool isActual;
 
+        public bool IsActual { get => isActual; set => isActual = value; }
 
         public Client(TcpClient tc)
         {
@@ -22,7 +24,7 @@ namespace SocketTest
             this.last_timestmp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             this.tc = tc;
             this.latency = -1;
-
+            this.isActual = false;
         }
 
         public void SetIP(string ip) { this.ip = ip; }

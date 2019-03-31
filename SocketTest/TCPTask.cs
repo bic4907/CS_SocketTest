@@ -6,23 +6,19 @@ using System.Threading.Tasks;
 
 namespace SocketTest
 {
-    enum TCPTaskCmd
-    {
-        
-    }
 
     class TCPTask
     {
         string uuid;
         Client client;
-        TCPTaskCmd cmd;
+        TCPServerCmd cmd;
         string data;
 
 
         internal TCPTask() {
             uuid = Guid.NewGuid().ToString();
         }
-        TCPTask(Client client, TCPTaskCmd cmd, string data) : this()
+        internal TCPTask(Client client, TCPServerCmd cmd, string data) : this()
         {
             this.client = client;
             this.cmd = cmd;
@@ -33,7 +29,14 @@ namespace SocketTest
         {
             return this.client;
         }
-
+        public TCPServerCmd GetCommand()
+        {
+            return this.cmd;
+        }
+        public string GetData()
+        {
+            return this.data;
+        }
 
     }
 }

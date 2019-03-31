@@ -9,7 +9,8 @@ namespace SocketTest
     enum TCPServerCmd
     {
       PING = 0,
-      PONG
+      PONG,
+      Message
     };
 
     [Serializable]
