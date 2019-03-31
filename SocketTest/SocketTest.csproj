@@ -75,6 +75,8 @@
     <Compile Include="TCPClientMessage.cs" />
     <Compile Include="TCPServerMessage.cs" />
     <Compile Include="TCPServer.cs" />
+    <Compile Include="TCPTask.cs" />
+    <Compile Include="TCPThreadPool.cs" />
     <EmbeddedResource Include="BasicForm.resx">
       <DependentUpon>BasicForm.cs</DependentUpon>
     </EmbeddedResource>
