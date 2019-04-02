@@ -103,7 +103,7 @@ namespace SocketTest
                 
                 // Receiving
                 NetworkStream stream = mainTc.GetStream();
-
+                
                 if (stream.CanRead && stream.DataAvailable)
                 {
                     IFormatter formatter = new BinaryFormatter();
@@ -130,6 +130,7 @@ namespace SocketTest
                     IFormatter formatter = new BinaryFormatter();
                     task.RemoteTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                     formatter.Serialize(stream, task);
+                    
                 }
 
 

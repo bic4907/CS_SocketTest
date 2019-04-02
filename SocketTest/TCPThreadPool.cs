@@ -23,6 +23,7 @@ namespace SocketTest
         {
             this.id = i;
             workerThr = new Thread(workerLoop);
+
         }
         public bool isIdle()
         {
@@ -34,36 +35,32 @@ namespace SocketTest
 
         public void Start()
         {
-            if (currentTask == null) throw new Exception("Task Not Exist");
-            Debug.Print(this.id.ToString() + " : " + "Waked up");
-            if(!workerThr.IsAlive)
-            {
-                workerThr.Start();
-            } else if(workerThr.ThreadState == System.Threading.ThreadState.Suspended)
-            {
-                Debug.Print(this.id.ToString() + " : " + "Resume");
-                workerThr.Resume();
-            }
+            workerThr.Start();
         }
         private void workerLoop()
         {
             while (true)
             {
-                Debug.Print(this.id.ToString() + " : " + currentTask.GetCommand().ToString());
+                if(currentTask == null)
+                {
+                    Thread.Sleep(1);
+                    continue;
+                }
 
                 NetworkStream stream = currentTask.GetClient().GetSocket().GetStream();
                 // 쓰레드가 작업할 영역
-                IFormatter formatter = new BinaryFormatter();
+                lock (stream)
+                {
+                    IFormatter formatter = new BinaryFormatter();
 
-                TCPServerMessage sendPacket = new TCPServerMessage();
-                sendPacket.Cmd = currentTask.GetCommand();
-                sendPacket.Param = currentTask.GetData();
+                    TCPServerMessage sendPacket = new TCPServerMessage();
+                    sendPacket.Cmd = currentTask.GetCommand();
+                    sendPacket.Param = currentTask.GetData();
 
-                formatter.Serialize(stream, sendPacket);
-   
-                currentTask = null;
-                Debug.Print(this.id.ToString() + " : " + "Suspended");
-                workerThr.Suspend();
+                    formatter.Serialize(stream, sendPacket);
+
+                    currentTask = null;
+                }
                 
             }
         }
@@ -89,14 +86,14 @@ namespace SocketTest
         private static TCPThreadPool instance;
         private static int ThreadCount = 10;
         private List<TCPThreadWorker> pool;
-        private Queue<TCPTask> queue; 
+        private LinkedList<TCPTask> queue; 
 
         private Thread poolMgr;
 
         internal TCPThreadPool()
         {
             this.pool = new List<TCPThreadWorker>();
-            this.queue = new Queue<TCPTask>();
+            this.queue = new LinkedList<TCPTask>();
         }
         ~TCPThreadPool()
         {
@@ -126,18 +123,16 @@ namespace SocketTest
             {
                 Debug.Print(i.ToString());
                 this.pool.Add(new TCPThreadWorker(i));
+                this.pool.Last().Start();
             }
             poolMgr = new Thread(MgrLoop);
-            
+            poolMgr.Start();
         }
 
         public void Stop()
         {
             this.queue.Clear();
-            if (poolMgr != null)
-            {
-                poolMgr.Abort();
-            }
+            poolMgr.Abort();
 
             foreach (TCPThreadWorker worker in pool)
             {
@@ -154,30 +149,29 @@ namespace SocketTest
 
                 if (this.queue.Count == 0)
                 {
-                    this.poolMgr.Suspend();
-
+                    continue;
                 }
                 else
                 {
                     TCPTask task = null;
                     lock (this.queue)
                     {
-                        task = this.queue.Dequeue();
+                        task = this.queue.First();
                     }
                     TCPThreadWorker targetWorker = null;
-
                     if (task == null) continue;
                     bool pushBack = false;
+
+                    if (!task.GetClient().GetSocket().GetStream().CanWrite) pushBack = true;
+                    if (pushBack)
+                    {
+                        this.queue.AddFirst(task);
+                        continue;
+                    }
+
                     foreach (TCPThreadWorker worker in pool)
                     {
-                        // TODO Task클래스에서 소켓이 사용중인지 검토필요
-                        TCPTask currTask = worker.GetCurrentTask();
-                        if (worker.isIdle() && task.GetClient().GetIP() == currTask.GetClient().GetIP())
-                        {
-                            pushBack = true;
-                            break;
-                        }
-                        else if (worker.isIdle())
+                        if (worker.isIdle())
                         {
                             targetWorker = worker;
                             break;
@@ -187,11 +181,11 @@ namespace SocketTest
 
                     if (pushBack)
                     {
-                        this.queue.Enqueue(task);
+                        this.queue.AddFirst(task);
                         continue;
                     }
                     targetWorker.Push(task);
-                    targetWorker.Start();
+                    this.queue.RemoveFirst();
                 }
                 
             }
@@ -201,15 +195,9 @@ namespace SocketTest
         {
             lock (this.queue)
             {
-                this.queue.Enqueue(task);
+                this.queue.AddFirst(task);
             }
-            if (!poolMgr.IsAlive)
-            {
-                poolMgr.Start();
-            } else if(poolMgr.ThreadState == System.Threading.ThreadState.Suspended)
-            {
-                poolMgr.Resume();
-            }
+
 
         }
 

@@ -27,7 +27,7 @@ namespace SocketTest
 
         internal TCPServer() {
             this.clients = new List<Client>();
-            thrPool = TCPThreadPool.GetInstance(1);
+            thrPool = TCPThreadPool.GetInstance(10);
             this.server = null;
             this.aliveThr = null;
         }
