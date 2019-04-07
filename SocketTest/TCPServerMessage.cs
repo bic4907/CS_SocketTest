@@ -8,9 +8,12 @@ namespace SocketTest
 {
     enum TCPServerCmd
     {
-      PING = 0,
-      PONG,
-      Message
+        PING = 0,
+        PONG,
+        Message,
+        FileList,
+        NewFileAlert,
+
     };
 
     [Serializable]

@@ -145,7 +145,7 @@ namespace SocketTest
 
         public void SendMessage(string msg, string uid = null, bool broadcast = false)
         {
-            this.svInstance.SendMessage(uid, msg, broadcast);
+            this.svInstance.SendMessage(msg, uid, broadcast);
         }
     }
 

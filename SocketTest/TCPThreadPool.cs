@@ -41,9 +41,9 @@ namespace SocketTest
         {
             while (true)
             {
-                if(currentTask == null)
+                Thread.Sleep(1);
+                if (currentTask == null)
                 {
-                    Thread.Sleep(1);
                     continue;
                 }
 
@@ -146,7 +146,7 @@ namespace SocketTest
             while (true)
             {
                 //Debug.Print(this.queue.Count.ToString(), this.pool.Count.ToString());
-
+                Thread.Sleep(1);
                 if (this.queue.Count == 0)
                 {
                     continue;

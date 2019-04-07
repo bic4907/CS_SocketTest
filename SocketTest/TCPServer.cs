@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 
 namespace SocketTest
 {
@@ -27,7 +28,7 @@ namespace SocketTest
 
         internal TCPServer() {
             this.clients = new List<Client>();
-            thrPool = TCPThreadPool.GetInstance(10);
+            thrPool = TCPThreadPool.GetInstance(30);
             this.server = null;
             this.aliveThr = null;
         }
@@ -106,6 +107,8 @@ namespace SocketTest
         {
             while (true)
             {
+                Thread.Sleep(1);
+
                 if (server.Pending())
                 {
                     TcpClient tc = server.AcceptTcpClient();
@@ -152,7 +155,7 @@ namespace SocketTest
                 {
                     Debug.Print(e.Message);
                 }
-                Thread.Sleep(10);
+
             }
         }
 
@@ -258,7 +261,13 @@ namespace SocketTest
                 List<Client> targetCls = GetActualClients();
                 foreach (Client c in targetCls)
                 {
-                    TCPTask task = new TCPTask(c, TCPServerCmd.Message, "hi");
+                    var json = new JObject();
+                    Debug.Print(msg);
+                    json.Add("content", msg);
+                    TCPTask task = new TCPTask(c, TCPServerCmd.Message, json.ToString());
+
+
+
                     thrPool.Push(task);
                     Debug.Print("메세지를 전송합니다");
                 }

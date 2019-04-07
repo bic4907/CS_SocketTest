@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 
 namespace SocketTest
 {
@@ -21,6 +22,8 @@ namespace SocketTest
         TcpClient mainTc;
         Thread mainSckThr;
         Queue<TCPClientMessage> sendQueue;
+        
+
 
         internal TCPClient()
         {
@@ -97,10 +100,20 @@ namespace SocketTest
             this.sendQueue.Enqueue(sendPacket);
         }
 
+        private void FileThread()
+        {
+            
+
+
+
+        }
+
+
         private void MainThread() {
             while(true)
             {
-                
+
+                Thread.Sleep(1);
                 // Receiving
                 NetworkStream stream = mainTc.GetStream();
                 
@@ -118,7 +131,10 @@ namespace SocketTest
                     } else if(recvPacket.Cmd == TCPServerCmd.Message)
                     {
                         string tmp_data = recvPacket.Param;
-                        controller.ShowMessage(tmp_data);
+                        Debug.Print(tmp_data);
+                        var json = JObject.Parse(tmp_data);
+
+                        controller.ShowMessage(json["content"].ToString());
                     }
 
                 }
@@ -132,8 +148,7 @@ namespace SocketTest
                     formatter.Serialize(stream, task);
                     
                 }
-
-
+                
             }
             
 
